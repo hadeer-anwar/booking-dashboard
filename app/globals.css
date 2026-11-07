@@ -1,0 +1,283 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens — warm, editorial theme inspired by the Lo La Clinic Admin
+ * reference (a boutique-clinic booking dashboard): a warm near-black instead
+ * of cool gray, a soft cream secondary surface, and a single rose accent
+ * used sparingly for primary actions/active states, paired with a serif
+ * display font for headings against a clean geometric-humanist sans body.
+ *
+ * `--color-gray-*` deliberately overrides Tailwind's built-in gray scale
+ * (not a new `warm-gray-*` family) so the hundreds of existing `bg-gray-*`/
+ * `text-gray-*`/`border-gray-*` utility classes already used throughout the
+ * app repaint into the new palette automatically, with no per-component
+ * changes required. `--color-brand-*` is new (the app previously had no
+ * accent color of its own) and is applied deliberately, only at primary
+ * actions/active states/badge tints — never as a blanket replacement — to
+ * match the reference's restrained use of its rose accent.
+ */
+@theme {
+  /*
+   * 50–300 are backgrounds/borders and stay as-is. 400–700 are the tiers
+   * actually used for body/secondary/muted text throughout the app — these
+   * are deepened a half-step darker than a strict lightness progression
+   * would give, so "muted" text still reads clearly against the warm cream
+   * surfaces instead of washing out. 800/900/950 were already near-black
+   * and are unchanged.
+   */
+  --color-gray-50: #fbf7f5;
+  --color-gray-100: #f5efec;
+  --color-gray-200: #e8e0dc;
+  --color-gray-300: #d6cbc6;
+  --color-gray-400: #9c8f8a;
+  --color-gray-500: #766a67;
+  --color-gray-600: #574d4b;
+  --color-gray-700: #423938;
+  --color-gray-800: #3a3232;
+  --color-gray-900: #241f20;
+  --color-gray-950: #171314;
+
+  --color-brand-50: #fef2f5;
+  --color-brand-100: #fde8ee;
+  --color-brand-200: #fbd0dc;
+  --color-brand-300: #f7aec3;
+  --color-brand-400: #f485a3;
+  --color-brand-500: #ef6389;
+  --color-brand-600: #d94874;
+  --color-brand-700: #b23760;
+  --color-brand-800: #8f3150;
+  --color-brand-900: #5c2033;
+
+  /*
+   * Secondary accents — mirror the reference's accent-secondary (tan) and
+   * accent-tertiary (gold) tints, used on the dashboard to distinguish KPI
+   * cards/chart series from each other without resorting to an unrelated
+   * rainbow of blue/purple/emerald/red.
+   */
+  --color-tan-100: #f6ebe0;
+  --color-tan-400: #e2b38c;
+  --color-tan-700: #8a6142;
+
+  --color-gold-100: #fffbe0;
+  --color-gold-400: #fff19e;
+  --color-gold-700: #8a7a1d;
+}
+
+/*
+ * `--font-sans`/`--font-heading` are runtime CSS variables set by next/font
+ * on <body> (see app/layout.tsx) — each already bakes in its own fallback
+ * stack. `@theme inline` tells Tailwind to reference them as-is (`var(...)`)
+ * in the generated `font-sans`/`font-heading` utilities instead of trying to
+ * resolve a literal value at build time, which is the documented pattern for
+ * wiring next/font into a Tailwind v4 theme.
+ */
+@theme inline {
+  --font-sans: var(--font-sans);
+  --font-heading: var(--font-heading);
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #241f20;
+  --secondary: #6f6461;
+  --accent: #ef6389;
+  --radius: 0.75rem;
+  --transition: 180ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  font-size: 16px;
+}
+
+@media (min-width: 1280px) {
+  html {
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 1536px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 1920px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 2560px) {
+  html {
+    font-size: 18px;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* Every semantic heading gets the warm serif display font by default —
+   matching the reference's heading/body pairing — without needing every
+   individual page/modal to opt in with a `font-heading` class by hand. */
+@layer base {
+  h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+  }
+}
+
+/* ── Shared transitions ─────────────────────────────── */
+a, button, input, select, textarea {
+  transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+  transition-duration: 180ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+}
+
+/* ── Scroll ─────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d6cbc6;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b3a7a2;
+}
+
+/* ── Keyframe animations ────────────────────────────── */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes dropdownFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(4px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes modalEnter {
+  0% {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* ── Utility classes ────────────────────────────────── */
+.animate-fade-in {
+  animation: fadeIn 0.35s ease-out forwards;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease-out both;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out both;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.35s ease-out both;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, #f5efec 25%, #e8e0dc 50%, #f5efec 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.animate-dropdown {
+  animation: dropdownFadeIn 0.12s ease-out forwards;
+}
+
+.animate-modal-enter {
+  animation: modalEnter 0.25s ease-out forwards;
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradientMove 12s ease infinite;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Stagger children utility — set --stagger-index on each child */
+.animate-stagger-in {
+  animation: fadeInUp 0.35s ease-out both;
+  animation-delay: calc(var(--stagger-index, 0) * 60ms);
+}
